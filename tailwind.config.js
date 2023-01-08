@@ -8,6 +8,7 @@ module.exports = {
       screens: {
         'max-mobile': {'max': '560px'},
         'min-mobile': {'min': '560px'},
+        'min-ipad': {'min': '840px'},
         'max-ipad': {'max': '840px'},
         'lg': {'max': '1080px'},
         'min-desktop': {'min': '1280px'},

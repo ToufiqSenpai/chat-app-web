@@ -13,3 +13,7 @@ body {
   color: white;
   cursor: default;
 }
+
+textarea::-webkit-scrollbar {
+  display: none;
+}

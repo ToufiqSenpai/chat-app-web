@@ -12,7 +12,7 @@ interface PasswordProps {
   id?: string
 }
 
-function PasswordInput({ value, onChange, label, error, variant, id }: PasswordProps) {
+function PasswordInput({ value, onChange, label, error, variant = 'outlined', id }: PasswordProps) {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   return (
@@ -82,10 +82,6 @@ function PasswordInput({ value, onChange, label, error, variant, id }: PasswordP
       {error && <FormHelperText error>{typeof error == 'string' && error}</FormHelperText>}
     </FormControl>
   )
-}
-
-PasswordInput.defaultProps = {
-  variant: 'outlined'
 }
 
 export default PasswordInput

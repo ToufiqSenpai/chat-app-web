@@ -4,11 +4,13 @@ import { useRouter } from 'next/navigation'
 import { Drawer, Divider } from '@mui/material'
 import InnerSidebar from './InnerSidebar'
 
-function Sidebar() {
+function Sidebar({ open, onClose }) {
 
   return (
     <aside className='max-ipad:hidden'>
       <Drawer
+        open={open}
+        onClose={onClose}
         anchor='left'
         variant='temporary'
         sx={{
@@ -21,6 +23,7 @@ function Sidebar() {
           }
         }}
       >
+        <InnerSidebar />
       </Drawer>
       <Drawer
         variant='permanent'
@@ -33,7 +36,6 @@ function Sidebar() {
             padding: '6px 12px'
           }
         }}
-        open
       >
         <InnerSidebar />
       </Drawer>
