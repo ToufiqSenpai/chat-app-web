@@ -25,7 +25,7 @@ function SetAvatar() {
     formData.append('avatar', image)
 
     fetch(process.env.NEXT_PUBLIC_API_URL + '/user/change-avatar', {
-      method: 'POST',
+      method: 'PUT',
       body: formData,
       headers: {
         "Authorization": 'Bearer ' + token.accessToken

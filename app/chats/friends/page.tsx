@@ -28,7 +28,7 @@ function Freinds() {
     <main className='w-[calc(100%-360px)] max-ipad:w-full absolute top-0 right-0 bottom-0 px-3'>
       <div className='mt-11'>
         <Tabs value={tab} onChange={(_, value) => setTab(value)}>
-          <Tab label='Request Friend' />
+          <Tab label='Friend Request' />
           <Tab label='Search User' />
         </Tabs>
       </div>

@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react'
-import { Avatar, TextField } from '@mui/material'
+import { Avatar, Snackbar, TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDebounce } from 'usehooks-ts'
 import accessToken from '../../../utils/access-token'
@@ -7,6 +7,11 @@ import accessToken from '../../../utils/access-token'
 function SearchUsers() {
   const [search, setSearch] = useState<string>('')
   const [users, setUsers] = useState([])
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: ''
+  })
+
   const debounce = useDebounce(search, 500)
 
   useEffect(() => {
@@ -34,11 +39,21 @@ function SearchUsers() {
       headers: {
         "Authorization": 'Bearer ' + token.accessToken
       }
+    }).then(response => response.json())
+    .then(response => {
+      setSnackbar({ open: true, message: response.message })
     })
   }
 
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={snackbar.open}
+        message={snackbar.message}
+        autoHideDuration={2000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      />
       <TextField
         type='text'
         placeholder='Search User with username or UID'
@@ -50,7 +65,7 @@ function SearchUsers() {
         <div key={index} className='flex justify-between items-center mt-3'>
           <div className='flex items-center'>
             <Avatar
-              src='/__test__/hu-tao.png'
+              src={process.env.NEXT_PUBLIC_API_URL + `/assets/users/avatar/${user.avatar}`}
               sx={{ width: 45, height: 45 }}
             />
             <p className='ml-3 text-lg font-medium'>{user.username}</p>
