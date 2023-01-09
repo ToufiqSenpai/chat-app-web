@@ -1,8 +1,10 @@
 'use client'
-import { useState, ReactNode } from 'react'
+import { useState, ReactNode, useEffect } from 'react'
 import { Avatar, Tab, TextField } from '@mui/material'
 import Tabs from '@mui/material/Tabs'
 import SearchUsers from './SearchUsers'
+import FriendRequest from './FriendRequest'
+import accessToken from '../../../utils/access-token'
 
 interface TabPanelProps {
   children?: ReactNode
@@ -20,9 +22,20 @@ function TabPanel({ children, value, index, ...other }: TabPanelProps) {
 
 function Freinds() {
   const [tab, setTab] = useState(0)
-  const [searchUser, setSearchUser] = useState([])
+  const [friendRequest, setFriendRequest] = useState([])
 
-
+  useEffect(() => { 
+    accessToken(token => {
+      fetch(process.env.NEXT_PUBLIC_API_URL + '/user/get-friend-request', {
+        headers: {
+          "Authorization": 'Bearer ' + token.accessToken
+        }
+      }).then(response => response.json())
+      .then(response => {
+        if(response.status == 200) setFriendRequest(response.data)
+      })
+    })
+  }, [])
 
   return (
     <main className='w-[calc(100%-360px)] max-ipad:w-full absolute top-0 right-0 bottom-0 px-3'>
@@ -33,19 +46,9 @@ function Freinds() {
         </Tabs>
       </div>
       <TabPanel value={tab} index={0}>
-        <div className='flex justify-between items-center'>
-          <div className='flex items-center'>
-            <Avatar
-              src='/__test__/hu-tao.png'
-              sx={{ width: 45, height: 45 }}
-            />
-            <p className='ml-3 text-lg font-medium'>Hu Tao</p>
-          </div>
-          <div className='flex gap-3'>
-            <button className='bg-indigo-500 py-1 px-3 rounded'>Accept</button>
-            <button className='bg-slate-700 py-1 px-3 rounded'>Decline</button>
-          </div>
-        </div>
+        {friendRequest.map((user, index) => (
+          <FriendRequest key={index} id={user.id} username={user.username} avatar={user.avatar} />
+        ))}
       </TabPanel>
       <TabPanel value={tab} index={1}>
        <SearchUsers />

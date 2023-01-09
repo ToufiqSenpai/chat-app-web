@@ -3,13 +3,17 @@ import './globals.css'
 import { usePathname } from 'next/navigation';
 import { createTheme, ThemeProvider } from '@mui/material';
 
+interface Children {
+  children: React.ReactNode
+}
+
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
   },
 });
 
-function RootLayout({ children }: { chlidren: React.ReactNode; }) {
+function RootLayout({ children }: Children) {
   const path = usePathname()
 
   return (
