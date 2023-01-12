@@ -2,44 +2,17 @@
 import React, { useEffect, useState } from 'react'
 import Sidebar from "./Sidebar";
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import { io } from 'socket.io-client';
+import RootProvider from './RootContext';
 import accessToken from '../../utils/access-token';
+import { useSocket } from '../../utils/use-socket';
 
 interface Children {
   children: React.ReactNode
 }
 
-const socket = io(process.env.NEXT_PUBLIC_API_URL)
-
-const RootContext = React.createContext({})
-
 function RootLayout({ children }: Children) {
   const [sidebar, setSidebar] = useState<boolean>(false)
-  const [user, setUser] = useState({
-    id: 0,
-    username: '',
-    avatar: ''
-  })
-
-  // Initialize user
-  useEffect(() => {
-    accessToken(async token => {
-      const uid = await fetch(process.env.NEXT_PUBLIC_API_URL + '/user/get-user-data', {
-        headers: {
-          "Authorization": 'Bearer ' + token.accessToken
-        }
-      }).then(response => response.json())
-      .then(response => {
-        const { id, username, avatar } = response.data
-        setUser({ id, username, avatar })
-
-        return id
-      })
-
-      socket.emit('login', uid)
-    })
-  }, [])
-
+  
   return (
     <html lang='en'>
       <head>
@@ -48,7 +21,7 @@ function RootLayout({ children }: Children) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body>
-        <RootContext.Provider value={{ user }}>
+        <RootProvider>
           <Sidebar 
             open={sidebar}
             onClose={() => setSidebar(false)}
@@ -57,7 +30,7 @@ function RootLayout({ children }: Children) {
             <MenuRoundedIcon sx={{ width: 40, height: 40 }} />
           </div>
           {children}
-        </RootContext.Provider>
+        </RootProvider>
       </body>
     </html>
   )
