@@ -9,10 +9,6 @@ function InnerSidebar() {
   const { push } = useRouter()
   const { chats } = useContext<RootContextProps>(RootContext)
 
-  useEffect(() => {
-    // console.log(chats[0] && chats[0].messageData.pop())
-  }, [chats])
-
   return (
     <>
       <section className='mb-3 flex justify-between items-center'>
@@ -36,15 +32,15 @@ function InnerSidebar() {
       />
       <section className='mt-4'>
         {chats.length > 0 ? chats.map((chat, index) => (
-          <div key={index} className='hover:bg-slate-700 p-1 grid grid-cols-[0.2fr_1fr]' onClick={() => push(`/chats/${chat.friendName}`)}>
+          <div key={index} className='hover:bg-slate-700 p-1 grid grid-cols-[0.2fr_1fr]' onClick={() => push(`/chats/${chat.friendMetadata.username}`)}>
             <Avatar
               src='/__test__/hu-tao.png'
-              alt={`${chat.friendName}'s-profile`}
+              alt={`${chat.friendMetadata.username}'s-profile`}
               sx={{ width: 55, height: 55 }}
             />
             <div className='ml-3 flex flex-col justify-between truncate'>
               <div className='flex justify-between'>
-                <h4 className='font-medium'>{chat.friendName}</h4>
+                <h4 className='font-medium'>{chat.friendMetadata.username}</h4>
                 <span className='bg-indigo-500 rounded-full p-0.5 text-sm flex items-center justify-center'>99+</span>
               </div>
               <p className='text-slate-500 truncate'>{chat.messageData.slice(-1)[0].text}</p>
