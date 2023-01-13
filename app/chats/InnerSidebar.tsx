@@ -7,7 +7,7 @@ import { RootContext, RootContextProps } from './RootContext';
 
 function InnerSidebar() {
   const { push } = useRouter()
-  const { chats } = useContext<RootContextProps>(RootContext)
+  const { chats, user } = useContext<RootContextProps>(RootContext)
 
   return (
     <>
@@ -19,7 +19,7 @@ function InnerSidebar() {
           </span>
           <span onClick={() => push('/chats/user-detail')}>
             <Avatar
-              src='/__test__/hu-tao.png'
+              src={process.env.NEXT_PUBLIC_API_URL + `/assets/users/avatar/${user.avatar}`}
               sx={{ width: 22, height: 22 }}
               className='cursor-pointer'
             />
@@ -31,10 +31,10 @@ function InnerSidebar() {
         placeholder='Search Chat'
       />
       <section className='mt-4'>
-        {chats.length > 0 ? chats.map((chat, index) => (
+        {chats?.length > 0 ? chats.map((chat, index) => (
           <div key={index} className='hover:bg-slate-700 p-1 grid grid-cols-[0.2fr_1fr]' onClick={() => push(`/chats/${chat.friendMetadata.username}`)}>
             <Avatar
-              src='/__test__/hu-tao.png'
+              src={process.env.NEXT_PUBLIC_API_URL + `/assets/users/avatar/${chat.friendMetadata.avatar}`}
               alt={`${chat.friendMetadata.username}'s-profile`}
               sx={{ width: 55, height: 55 }}
             />

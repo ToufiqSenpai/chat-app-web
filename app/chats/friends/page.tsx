@@ -47,7 +47,7 @@ function Freinds() {
       </div>
       <TabPanel value={tab} index={0}>
         {friendRequest.map((user, index) => (
-          <FriendRequest key={index} id={user.id} username={user.username} avatar={user.avatar} />
+          <FriendRequest key={index} id={user.id} username={user.username} avatar={user.avatar} setFriendRequest={setFriendRequest} />
         ))}
       </TabPanel>
       <TabPanel value={tab} index={1}>

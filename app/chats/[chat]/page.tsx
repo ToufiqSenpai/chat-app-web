@@ -1,11 +1,10 @@
 'use client'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { Avatar, TextField } from '@mui/material' 
 import CheckIcon from '@mui/icons-material/Check'
 import SendIcon from '@mui/icons-material/Send'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import { RootContext } from '../RootContext'
-import Router from 'next/router'
 
 function ChatContainer({ params }) {
   const msgStyle = 'relative max-w-[65%] w-max py-2 px-4 mb-2'
@@ -15,6 +14,8 @@ function ChatContainer({ params }) {
   const [message, setMessage] = useState<string>('')
 
   const { chats, user, sendMessage } = useContext(RootContext)
+
+  const containerMessageRef = useRef<HTMLDivElement>(null)
 
   const chat = chats.map(chat => {
     if(chat.friendMetadata.username == params.chat) return chat
@@ -26,9 +27,17 @@ function ChatContainer({ params }) {
     sendMessage(message, chat.chatId, chat.friendMetadata.id)
   }
 
+  // Scroll to latest chat when send message or recieve
+  useEffect(() => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      // behavior: 'smooth'
+    })
+  }, [chats])
+
   return (
-    <main className='w-[calc(100%-360px)] max-ipad:w-full absolute top-0 right-0 bottom-0'>
-      <header className='p-3 z-10 fixed bg-[rgb(15,23,42)]'>
+    <main className='w-[calc(100%-360px)] max-ipad:w-full absolute top-0 right-0 bottom-0' ref={containerMessageRef}>
+      <header className='p-3 z-10 fixed bg-[rgb(15,23,42)] w-full'>
         <section className='flex items-center'>
           {/* <MenuRoundedIcon sx={{ width: 40, height: 40, marginRight: '5px' }} /> */}
           <Avatar 
@@ -51,12 +60,18 @@ function ChatContainer({ params }) {
           }
         })}
       </section>
-      <section className='fixed bottom-0 bg-[rgb(15,23,42)] w-full p-3 flex'>
+      <form className='fixed bottom-0 bg-[rgb(15,23,42)] w-full p-3 flex' onSubmit={e => e.preventDefault()}>
         <TextField
           className='rounded-full px-4 min-ipad:w-[calc(100%-400px)] w-full' 
           size='small'
           value={message}
-          onChange={e => setMessage(e.target.value)}  
+          onChange={e => setMessage(e.target.value)} 
+          onKeyDown={e => {
+            if(e.key == 'Enter' && !e.shiftKey) {
+              e.preventDefault()
+              handleSendMessage()
+            }
+          }} 
           maxRows={4}
           multiline
           fullWidth  
@@ -66,7 +81,7 @@ function ChatContainer({ params }) {
           className='bg-indigo-500 p-[6px] w-10 h-10 rounded-full ml-2'
           onClick={handleSendMessage}
         ><SendIcon /></button>
-      </section>
+      </form>
     </main>
   )
 }

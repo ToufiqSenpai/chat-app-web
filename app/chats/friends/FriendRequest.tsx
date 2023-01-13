@@ -2,13 +2,17 @@ import { Avatar } from '@mui/material'
 import { MouseEvent } from 'react'
 import accessToken from '../../../utils/access-token'
 
-function FriendRequest({ id, username, avatar }) {
+function FriendRequest({ id, username, avatar, setFriendRequest }) {
   const handleAccept = async (e: MouseEvent<HTMLButtonElement>) => {
     // @ts-ignore
     const isAccept = e.target.getAttribute('data-accept')
     // @ts-ignore
     const uid = e.target.getAttribute('data-uid')
     const token = accessToken()
+
+    setFriendRequest(state => {
+      return state.filter(val => val != id)
+    })
 
     if(!['true', 'false'].includes(isAccept)) return
 

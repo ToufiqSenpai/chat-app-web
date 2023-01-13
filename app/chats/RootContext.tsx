@@ -1,7 +1,7 @@
 'use client';
 import { createContext, useEffect, useState } from 'react'
 import { io, Socket } from 'socket.io-client';
-import { ChatData, MessageData, SendMessageBody, UserMetadata } from '../../interfaces';
+import { ChatData, MessageData, ReceivedMessage, SendMessageBody, UserMetadata } from '../../interfaces';
 import accessToken from '../../utils/access-token';
 import { useSocket } from '../../utils/use-socket';
 
@@ -25,7 +25,9 @@ export default function RootProvider({ children }) {
     avatar: ''
   })
   const [chats, setChats] = useState<ChatData[]>([])
+  const [receivedMessage, setReceivedMessage] = useState<ReceivedMessage>(null)
 
+  // Socket initializer
   useEffect(() => {
     socketInitializer()
   }, [])
@@ -48,23 +50,8 @@ export default function RootProvider({ children }) {
       
       socket.emit('login', uid)
       
-      socket.on('receive-message', data => {
-        const newChats = chats.map(chat => {
-          console.log('entahlah')
-          if (chat.chatId == data.chatId) {
-            console.log("Ketemu")
-            return {
-              ...chat,
-              messageData: [...chat.messageData, data.messageData]
-            }
-          } else {
-            console.log("Gak ketemu")
-            return chat
-          }
-        })
-        console.log(data)
-        console.log(newChats)
-        setChats(newChats)
+      socket.on('receive-message', (data: ReceivedMessage) => {
+        setReceivedMessage(data)
       })
     })
   }
@@ -86,11 +73,24 @@ export default function RootProvider({ children }) {
 
   // Recieve Chat
   useEffect(() => {
-    
-  }, [socket])
+   if(receivedMessage) {
+    setChats(() => {
+      const newChats = chats.map(chat => {
+        if (chat.chatId == receivedMessage.chatId) {
+          return {
+            ...chat,
+            messageData: [...chat.messageData, receivedMessage.messageData]
+          }
+        } else return chat
+      })
+
+      return newChats
+    })
+   }
+  }, [receivedMessage])
 
   const sendMessage: SendMessage = (message, chatId, recipientId) => {
-    socket.emit('send-message', {
+    socket?.emit('send-message', {
       text: message,
       authorId: user.id,
       recipientId,
