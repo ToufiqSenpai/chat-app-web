@@ -43,10 +43,11 @@ function InnerSidebar() {
                 <h4 className='font-medium'>{chat.friendMetadata.username}</h4>
                 <span className='bg-indigo-500 rounded-full p-0.5 text-sm flex items-center justify-center'>99+</span>
               </div>
-              <p className='text-slate-500 truncate'>{chat.messageData.slice(-1)[0].text}</p>
+              <p className='text-slate-500 truncate'>{chat.messageData.slice(-1)[0]?.text}</p>
             </div>
           </div>
-        )) : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((index) => (
+        )) : null}
+        {chats == null ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((index) => (
           <div key={index} className='p-1 grid grid-cols-[0.2fr_1fr]'>
             <Skeleton
               variant='circular'
@@ -63,7 +64,7 @@ function InnerSidebar() {
               />
             </div>
           </div>
-        ))}
+        )) : null}
       </section>
     </>
   )

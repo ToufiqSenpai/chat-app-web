@@ -1,11 +1,10 @@
 'use client'
-import { useContext } from 'react'
-import ContentPasteIcon from '@mui/icons-material/ContentPaste';
-import { RootContext } from '../RootContext';
+import React, { useContext } from 'react'
+import { RootContext } from '../RootContext'
 
-function UID() {
+function Username() {
   const { user } = useContext(RootContext) 
-
+  
   return (
     <section className="flex justify-between items-center p-3 cursor-pointer" onClick={async e => {
       try {
@@ -15,12 +14,11 @@ function UID() {
       }
     }}>
       <div className="flex">
-        <p className="m-0 w-28">UID</p>
-        <p className="text-gray-400 m-0">{user.id}</p>
+        <p className="m-0 w-28">Username</p>
+        <p className="text-gray-400 m-0">{user.username}</p>
       </div>
-      <ContentPasteIcon />
     </section>
   )
 }
 
-export default UID
+export default Username

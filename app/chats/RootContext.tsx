@@ -16,7 +16,7 @@ export interface RootContextProps {
 
 export const RootContext = createContext<RootContextProps | null>(null)
 
-let socket: Socket
+// let socket: Socket
 
 export default function RootProvider({ children }) {
   const [user, setUser] = useState<UserMetadata>({
@@ -24,17 +24,13 @@ export default function RootProvider({ children }) {
     username: '',
     avatar: ''
   })
-  const [chats, setChats] = useState<ChatData[]>([])
+  const [chats, setChats] = useState<ChatData[]>(null)
   const [receivedMessage, setReceivedMessage] = useState<ReceivedMessage>(null)
+
+  const socket = useSocket(process.env.NEXT_PUBLIC_API_URL)
 
   // Socket initializer
   useEffect(() => {
-    socketInitializer()
-  }, [])
-
-  const socketInitializer = () => {
-    socket = io(process.env.NEXT_PUBLIC_API_URL)
-
     accessToken(async token => {
       const uid = await fetch(process.env.NEXT_PUBLIC_API_URL + '/user/get-user-data', {
         headers: {
@@ -48,13 +44,15 @@ export default function RootProvider({ children }) {
           return id
         })
       
-      socket.emit('login', uid)
-      
-      socket.on('receive-message', (data: ReceivedMessage) => {
-        setReceivedMessage(data)
-      })
+      if(socket) {
+        socket.emit('login', uid)
+
+        socket?.on('receive-message', (data: ReceivedMessage) => {
+          setReceivedMessage(data)
+        })
+      }
     })
-  }
+  }, [socket])
 
   // Fetch handler
   useEffect(() => {

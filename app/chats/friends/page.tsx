@@ -24,16 +24,16 @@ function Freinds() {
   const [tab, setTab] = useState(0)
   const [friendRequest, setFriendRequest] = useState([])
 
-  useEffect(() => { 
+  useEffect(() => {
     accessToken(token => {
       fetch(process.env.NEXT_PUBLIC_API_URL + '/user/get-friend-request', {
         headers: {
           "Authorization": 'Bearer ' + token.accessToken
         }
       }).then(response => response.json())
-      .then(response => {
-        if(response.status == 200) setFriendRequest(response.data)
-      })
+        .then(response => {
+          if (response.status == 200) setFriendRequest(response.data)
+        })
     })
   }, [])
 
@@ -51,7 +51,7 @@ function Freinds() {
         ))}
       </TabPanel>
       <TabPanel value={tab} index={1}>
-       <SearchUsers />
+        <SearchUsers />
       </TabPanel>
     </main>
   )
